@@ -44,10 +44,10 @@ requirements:
     - gmock
     - libblas
     - liblapack
-    - libfaiss =1.6.5=*cuda
+    - libfaiss =1.6.5=*_cuda
   run:
     - python
-    - libfaiss =1.6.5=*cuda
+    - libfaiss =1.6.5=*_cuda
     - numpy
     # unfortunately run-depends on setuptools due to pkg_resources.resource_filename
     # https://github.com/CannyLab/tsne-cuda/blob/3.0.0/src/python/tsnecuda/TSNE.py#L138

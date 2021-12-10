@@ -65,5 +65,5 @@ cmake \
 # compile
 make -j$CPU_COUNT
 
-cd ../python
+cd python
 pip install .

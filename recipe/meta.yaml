@@ -1,12 +1,14 @@
-{% set version = "3.0.0" %}
+{% set version = "3.0.1" %}
 
 package:
   name: tsnecuda
   version: {{ version }}
 
 source:
-  - url: https://github.com/CannyLab/tsne-cuda/archive/refs/tags/{{ version }}.tar.gz
-    sha256: 6f5a0c5c0c54a4a74837e0e84fa37396ca6912a2031bdf6e846d5c01254e3e2c
+  # TEMP: pull from branch for release candidate
+  - url: https://github.com/CannyLab/tsne-cuda/archive/3.0.1-rc0.tar.gz
+  # - url: https://github.com/CannyLab/tsne-cuda/archive/refs/tags/{{ version }}.tar.gz
+    sha256: b0a2dab867cf1228f4d3d032e87546ffab8832be21ee101a65735c20ee020eb1
     patches:
       # do not try to detect (or set) "build number" from git;
       # we're only building released versions anyway
@@ -22,7 +24,7 @@ source:
 
 
 build:
-  number: 3
+  number: 0
   # only linux for the moment
   skip: true  # [not linux]
   skip: true  # [cuda_compiler_version == "None"]
@@ -49,9 +51,6 @@ requirements:
     - python
     - libfaiss =1.7.1=*_cuda
     - numpy
-    # unfortunately run-depends on setuptools due to pkg_resources.resource_filename
-    # https://github.com/CannyLab/tsne-cuda/blob/3.0.0/src/python/tsnecuda/TSNE.py#L138
-    - setuptools
     # despite building with cppzmq, conda wants zeromq here
     - zeromq
 test:

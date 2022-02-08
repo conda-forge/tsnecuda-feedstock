@@ -16,8 +16,7 @@ source:
 
 build:
   number: 0
-  # only linux for the moment
-  skip: true  # [not linux]
+  skip: true  # [osx]
   skip: true  # [cuda_compiler_version == "None"]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
 

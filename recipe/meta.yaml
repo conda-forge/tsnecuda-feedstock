@@ -6,7 +6,7 @@ package:
 
 source:
   - url: https://github.com/CannyLab/tsne-cuda/archive/refs/tags/{{ version }}.tar.gz
-    sha256: 0f778247191f483df22dc4dbed792c9a6a9152ee7404329c4d9da3fd9a8774d6
+    sha256: 02a6b6d5367f0e0658a9362aa8bbc7b043af74d64a56ac849c640c57f8d22bf0
   # include submodule (not in github tarball due to dear-github/dear-github#214), c.f.
   # https://github.com/CannyLab/tsne-cuda/tree/{{ version }}/third_party
   - git_url: https://github.com/jarro2783/cxxopts.git

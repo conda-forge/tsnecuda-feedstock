@@ -38,10 +38,9 @@ requirements:
     - gmock
     - libblas
     - liblapack
-    - libfaiss =1.7.1=*_cuda
+    - libfaiss
   run:
     - python
-    - libfaiss =1.7.1=*_cuda
     - numpy
     # despite building with cppzmq, conda wants zeromq here
     - zeromq

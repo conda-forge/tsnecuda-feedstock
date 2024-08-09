@@ -59,6 +59,7 @@ mkdir build
 cd build
 
 cmake \
+    ${CMAKE_ARGS} \
     ${CUDA_CONFIG_ARGS+"${CUDA_CONFIG_ARGS[@]}"} \
     ..
 

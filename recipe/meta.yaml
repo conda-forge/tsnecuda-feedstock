@@ -1,4 +1,10 @@
-{% set version = "3.0.1" %}
+{% set version = "3.0.2" %}
+
+{% if cuda_compiler_version != "None" %}
+{% set cuda_major = environ.get("cuda_compiler_version", "11.8").split(".")[0] | int %}
+{% else %}
+{% set cuda_major = 0 %}
+{% endif %}
 
 package:
   name: tsnecuda
@@ -6,7 +12,7 @@ package:
 
 source:
   - url: https://github.com/CannyLab/tsne-cuda/archive/refs/tags/{{ version }}.tar.gz
-    sha256: 0f778247191f483df22dc4dbed792c9a6a9152ee7404329c4d9da3fd9a8774d6
+    sha256: 02a6b6d5367f0e0658a9362aa8bbc7b043af74d64a56ac849c640c57f8d22bf0
   # include submodule (not in github tarball due to dear-github/dear-github#214), c.f.
   # https://github.com/CannyLab/tsne-cuda/tree/{{ version }}/third_party
   - git_url: https://github.com/jarro2783/cxxopts.git
@@ -15,7 +21,7 @@ source:
 
 
 build:
-  number: 1
+  number: 0
   # only linux for the moment
   skip: true  # [not linux]
   skip: true  # [cuda_compiler_version == "None"]
@@ -23,6 +29,7 @@ build:
 
 requirements:
   build:
+    - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}
@@ -37,10 +44,16 @@ requirements:
     - gmock
     - libblas
     - liblapack
-    - libfaiss =1.7.1=*_cuda
+    - libfaiss
+    {% if cuda_major >= 12 %}
+    - cuda-version {{ cuda_compiler_version }}
+    - libcublas-dev
+    - libcufft-dev
+    - libcusolver-dev
+    - libcusparse-dev
+    {% endif %}
   run:
     - python
-    - libfaiss =1.7.1=*_cuda
     - numpy
     # despite building with cppzmq, conda wants zeromq here
     - zeromq
@@ -64,3 +77,4 @@ about:
 extra:
   recipe-maintainers:
     - h-vetinari
+    - DavidMChan

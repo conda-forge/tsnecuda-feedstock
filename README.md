@@ -5,7 +5,7 @@ Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/tsnecuda-feedst
 
 Home: https://github.com/CannyLab/tsne-cuda
 
-Package license: BSD-3-Clause AND MIT
+Package license: BSD-3-Clause
 
 Summary: GPU Accelerated t-SNE for CUDA with Python bindings
 

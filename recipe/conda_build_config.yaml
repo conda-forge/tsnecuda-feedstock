@@ -1,0 +1,7 @@
+# conda-forge's global default pins libblas to the reference *netlib build, which
+# has no FAISS >= 1.10 build (FAISS ships blis/mkl/openblas only) and would force
+# the ancient FAISS 1.9.0. Select openblas instead: it is self-contained and
+# portable, and avoids the *mkl variant, which is currently broken against
+# oneMKL 2026.x (FAISS expects libmkl_intel_lp64.so.2, no longer shipped).
+blas_impl:
+  - openblas

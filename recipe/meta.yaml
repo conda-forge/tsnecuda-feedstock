@@ -44,6 +44,11 @@ requirements:
     # FAISS carries its own BLAS transitively. Floor FAISS at 1.10 (the newest
     # on conda-forge) so we don't regress to the netlib-era 1.9.0.
     - libfaiss >=1.10
+    # Steer FAISS to its self-contained openblas variant. The default *mkl
+    # variant is broken against current conda-forge MKL (faiss expects
+    # libmkl_intel_lp64.so.2, which oneMKL 2026.x no longer ships), and openblas
+    # is lighter and portable. tsnecuda itself does not link this.
+    - libblas * *openblas
     {% if cuda_major >= 12 %}
     - cuda-version {{ cuda_compiler_version }}
     - libcublas-dev
@@ -54,6 +59,8 @@ requirements:
   run:
     - python
     - numpy
+    # keep the FAISS BLAS variant consistent (and self-contained) at install time
+    - libblas * *openblas
 
 test:
   imports:

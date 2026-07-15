@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 677364d..e902f5a 100644
+index 677364d..95ca5d3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -31,19 +31,19 @@ ADD_DEFINITIONS(-DVERSION_PATCH=${CMAKE_PROJECT_VERSION_PATCH})
@@ -125,7 +125,7 @@ index 677364d..e902f5a 100644
 +            -gencode=arch=compute_100,code=sm_100
 +            -gencode=arch=compute_120,code=sm_120
 +            -gencode=arch=compute_120,code=compute_120
-+        )
+         )
 +    elseif(CUDAToolkit_VERSION_MAJOR EQUAL "12")
 +        set(CUDA_ARCH
 +            -gencode=arch=compute_70,code=sm_70
@@ -153,7 +153,7 @@ index 677364d..e902f5a 100644
 +            -gencode=arch=compute_70,code=sm_70
 +            -gencode=arch=compute_75,code=sm_75
 +            -gencode=arch=compute_80,code=sm_80
-         )
++        )
 +        # sm_86 available on CUDA >= 11.1; sm_90 only on 11.8+.
 +        if(CUDAToolkit_VERSION_MINOR GREATER_EQUAL "1")
 +            list(APPEND CUDA_ARCH -gencode=arch=compute_86,code=sm_86)
@@ -199,17 +199,17 @@ index 677364d..e902f5a 100644
  #-------------------------------------------------------------------------------
  
 -# GTEST Configuration
--#-------------------------------------------------------------------------------
++# Interactive-visualization (ZMQ) support is intentionally disabled: the ZMQ
++# publisher path in fit_tsne is compiled out via -DNO_ZMQ, dropping the zeromq /
++# cppzmq build and runtime dependency for a leaner, more portable package.
+ #-------------------------------------------------------------------------------
 -find_package(gflags REQUIRED)
 -# find_package(GLog REQUIRED)
 -find_package(GTest REQUIRED)
 -#-------------------------------------------------------------------------------
 -
 -# ZMQ Configuration
-+# Interactive-visualization (ZMQ) support is intentionally disabled: the ZMQ
-+# publisher path in fit_tsne is compiled out via -DNO_ZMQ, dropping the zeromq /
-+# cppzmq build and runtime dependency for a leaner, more portable package.
- #-------------------------------------------------------------------------------
+-#-------------------------------------------------------------------------------
 -find_package(ZMQ)
 -if(NOT ${ZMQ_FOUND})
 -    ADD_DEFINITIONS(-DNO_ZMQ)
@@ -239,7 +239,7 @@ index 677364d..e902f5a 100644
      CUDA::cudart
      CUDA::cublas
      # CUDA::cublasLt
-@@ -234,7 +234,6 @@ target_link_libraries(tsnecuda PRIVATE
+@@ -234,29 +234,19 @@ target_link_libraries(tsnecuda PRIVATE
      OpenMP::OpenMP_CXX
      pthread
      -Wl,--allow-multiple-definition
@@ -247,7 +247,22 @@ index 677364d..e902f5a 100644
      ${FAISS_LIBRARIES}
  )
  
-@@ -253,10 +252,9 @@ endif()
+-# BLAS configuration
+-#-------------------------------------------------------------------------------
+-find_package(MKL)
+-if(MKL_FOUND)
+-  target_link_libraries(tsnecuda PRIVATE ${MKL_LIBRARIES})
+-else()
+-  find_package(BLAS REQUIRED)
+-  target_link_libraries(tsnecuda PRIVATE ${BLAS_LIBRARIES})
+-
+-  find_package(LAPACK REQUIRED)
+-  target_link_libraries(tsnecuda PRIVATE ${LAPACK_LIBRARIES})
+-endif()
++# No CPU BLAS/LAPACK is linked: the library's only GEMM is GPU cuBLAS
++# (cublasSgemm), and FAISS carries its own BLAS transitively. Dropping the
++# find_package(BLAS/LAPACK/MKL) removes a vestigial dependency and, on the
++# conda-forge side, the libblas/liblapack pin (incl. the *netlib pin) entirely.
  #-------------------------------------------------------------------------------
  
  #-------------------------------------------------------------------------------

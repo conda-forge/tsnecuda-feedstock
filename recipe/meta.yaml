@@ -1,22 +1,15 @@
-{% set version = "3.0.2" %}
+{% set version = "4.0.1" %}
 
 package:
   name: tsnecuda
   version: {{ version }}
 
 source:
-  - url: https://github.com/CannyLab/tsne-cuda/archive/refs/tags/{{ version }}.tar.gz
-    sha256: 02a6b6d5367f0e0658a9362aa8bbc7b043af74d64a56ac849c640c57f8d22bf0
-    patches:
-      # Streamline the build for packaging: drop the vestigial gflags/gtest links,
-      # compile out the ZMQ interactive-viz path and the standalone C++ CLI (which
-      # pulled in the cxxopts submodule), and modernize CUDA arch selection (honor
-      # CMAKE_CUDA_ARCHITECTURES; cover A100/H100/H200/B200 and CUDA 13). Folds into
-      # upstream at the next tsne-cuda release, at which point this patch is dropped.
-      - patches/0001-streamline-build-and-modernize-cuda-arch.patch
+  url: https://github.com/CannyLab/tsne-cuda/archive/refs/tags/{{ version }}.tar.gz
+  sha256: 33edac78b22f1cce749f1a6fb01a5a344fc80f0c6c0433d050ef9ab8d7d99a87
 
 build:
-  number: 1
+  number: 0
   # only linux for the moment; needs a CUDA compiler
   skip: true  # [not linux or cuda_compiler_version == "None"]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
@@ -66,7 +59,7 @@ about:
   home: https://github.com/CannyLab/tsne-cuda
   license: BSD-3-Clause
   license_file:
-    - LICENSE.tsnecuda
+    - LICENSE
 
   summary: GPU Accelerated t-SNE for CUDA with Python bindings
   dev_url: https://github.com/CannyLab/tsne-cuda

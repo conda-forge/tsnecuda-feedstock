@@ -1,11 +1,5 @@
 {% set version = "3.0.2" %}
 
-{% if cuda_compiler_version != "None" %}
-{% set cuda_major = environ.get("cuda_compiler_version", "12.9").split(".")[0] | int %}
-{% else %}
-{% set cuda_major = 0 %}
-{% endif %}
-
 package:
   name: tsnecuda
   version: {{ version }}
@@ -23,9 +17,8 @@ source:
 
 build:
   number: 1
-  # only linux for the moment
-  skip: true  # [not linux]
-  skip: true  # [cuda_compiler_version == "None"]
+  # only linux for the moment; needs a CUDA compiler
+  skip: true  # [not linux or cuda_compiler_version == "None"]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
 
 requirements:
@@ -49,13 +42,14 @@ requirements:
     # libmkl_intel_lp64.so.2, which oneMKL 2026.x no longer ships), and openblas
     # is lighter and portable. tsnecuda itself does not link this.
     - libblas * *openblas
-    {% if cuda_major >= 12 %}
-    - cuda-version {{ cuda_compiler_version }}
-    - libcublas-dev
-    - libcufft-dev
-    - libcusolver-dev
-    - libcusparse-dev
-    {% endif %}
+    # The build skips when there's no CUDA compiler (see build.skip above), so
+    # these are always present in a real build; the selectors keep the recipe
+    # valid for the no-CUDA metadata pass without jinja control flow.
+    - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
+    - libcublas-dev                             # [cuda_compiler_version != "None"]
+    - libcufft-dev                              # [cuda_compiler_version != "None"]
+    - libcusolver-dev                           # [cuda_compiler_version != "None"]
+    - libcusparse-dev                           # [cuda_compiler_version != "None"]
   run:
     - python
     - numpy

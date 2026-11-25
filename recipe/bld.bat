@@ -1,10 +1,18 @@
 @echo on
 setlocal EnableDelayedExpansion
 
-:: Same targets as build.sh for CUDA 12.x and 13.x: SASS for Turing through
-:: Blackwell, plus PTX for sm_120 so newer GPUs can JIT. A pre-set
-:: CMAKE_CUDA_ARCHS is respected.
-if not defined CMAKE_CUDA_ARCHS set "CMAKE_CUDA_ARCHS=75-real;80-real;86-real;89-real;90-real;100-real;120-real;120"
+:: CUDA 13: the same targets as build.sh, SASS for Turing through Blackwell
+:: plus PTX for sm_120 so newer GPUs can JIT. CUDA 12: its CCCL headers do
+:: not compile for Blackwell (sm_100+) with MSVC in C++20, so stop at sm_90
+:: and ship sm_90 PTX, which Blackwell GPUs JIT. A pre-set CMAKE_CUDA_ARCHS
+:: is respected.
+if not defined CMAKE_CUDA_ARCHS (
+    if "%cuda_compiler_version:~0,3%"=="12." (
+        set "CMAKE_CUDA_ARCHS=75-real;80-real;86-real;89-real;90"
+    ) else (
+        set "CMAKE_CUDA_ARCHS=75-real;80-real;86-real;89-real;90-real;100-real;120-real;120"
+    )
+)
 
 mkdir build
 cd build

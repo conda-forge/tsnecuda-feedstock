@@ -7,8 +7,8 @@ package:
 source:
   # TEMPORARY while testing the Windows build: the unreleased commit that adds
   # it upstream. Switch back to the release tag before merging.
-  url: https://github.com/CannyLab/tsne-cuda/archive/e3e519baa4b817d03fb3a33193089d8caf130256.tar.gz
-  sha256: e14c400a584075148cc2bf3e3261ea424fb032607364213f640d4bd25744ba38
+  url: https://github.com/CannyLab/tsne-cuda/archive/829a73cb44ddd6f93a14080d5207de4b3b5b9000.tar.gz
+  sha256: 35e9933463a88295876cd26f5079cdbc559975a729b1e579e709670818f56f5c
 
 build:
   number: 1

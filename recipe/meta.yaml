@@ -5,13 +5,15 @@ package:
   version: {{ version }}
 
 source:
-  url: https://github.com/CannyLab/tsne-cuda/archive/refs/tags/{{ version }}.tar.gz
-  sha256: 3080be46874c246d3c5685e4754ca7f3b717d6f57444b768aaa6789157c398f5
+  # TEMPORARY while testing the Windows build: the unreleased commit that adds
+  # it upstream. Switch back to the release tag before merging.
+  url: https://github.com/CannyLab/tsne-cuda/archive/e3e519baa4b817d03fb3a33193089d8caf130256.tar.gz
+  sha256: e14c400a584075148cc2bf3e3261ea424fb032607364213f640d4bd25744ba38
 
 build:
-  number: 0
-  # only linux for the moment; needs a CUDA compiler
-  skip: true  # [not linux or cuda_compiler_version == "None"]
+  number: 1
+  # Linux and Windows; needs a CUDA compiler
+  skip: true  # [osx or cuda_compiler_version == "None"]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
 
 requirements:
@@ -21,7 +23,8 @@ requirements:
     - {{ compiler('cxx') }}
     - {{ compiler('cuda') }}
     - cmake
-    - make
+    - make   # [unix]
+    - ninja  # [win]
   host:
     - python
     - pip
@@ -51,9 +54,12 @@ requirements:
 
 test:
   imports:
-    # `import tsnecuda` does not dlopen libtsnecuda (the ctypes load happens when a
-    # TSNE object is constructed), so this stays safe on the GPU-less CI runners.
     - tsnecuda
+  commands:
+    # Constructing TSNE loads libtsnecuda (and with it FAISS and the CUDA
+    # libraries) without touching a GPU, so a missing shared library or DLL
+    # fails here even on the GPU-less CI runners.
+    - python -c "from tsnecuda import TSNE; TSNE()"
 
 about:
   home: https://github.com/CannyLab/tsne-cuda

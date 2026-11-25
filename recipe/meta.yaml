@@ -1,4 +1,4 @@
-{% set version = "4.0.1" %}
+{% set version = "4.1.0" %}
 
 package:
   name: tsnecuda
@@ -6,10 +6,10 @@ package:
 
 source:
   url: https://github.com/CannyLab/tsne-cuda/archive/refs/tags/{{ version }}.tar.gz
-  sha256: 33edac78b22f1cce749f1a6fb01a5a344fc80f0c6c0433d050ef9ab8d7d99a87
+  sha256: 3080be46874c246d3c5685e4754ca7f3b717d6f57444b768aaa6789157c398f5
 
 build:
-  number: 2
+  number: 0
   # only linux for the moment; needs a CUDA compiler
   skip: true  # [not linux or cuda_compiler_version == "None"]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}

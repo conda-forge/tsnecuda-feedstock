@@ -1,17 +1,15 @@
-{% set version = "4.1.0" %}
+{% set version = "4.1.1" %}
 
 package:
   name: tsnecuda
   version: {{ version }}
 
 source:
-  # TEMPORARY while testing the Windows build: the unreleased commit that adds
-  # it upstream. Switch back to the release tag before merging.
-  url: https://github.com/CannyLab/tsne-cuda/archive/15474ab720d1f50b46a5d2662c821b164019abfe.tar.gz
-  sha256: 3893e552459f55f8fa6512df0f3d3fa9a06c30a55dcddacc6d1795c6aebddea2
+  url: https://github.com/CannyLab/tsne-cuda/archive/refs/tags/{{ version }}.tar.gz
+  sha256: b4171f7a37fb1b349e1337e8f4567152f72d268a5af231af452b7b3177c5cfc0
 
 build:
-  number: 1
+  number: 0
   # Linux and Windows; needs a CUDA compiler
   skip: true  # [osx or cuda_compiler_version == "None"]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
